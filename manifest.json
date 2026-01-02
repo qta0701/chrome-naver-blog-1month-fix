@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "네이버블로그 검색화면 1개월 기간 고정",
   "description": "네이버 블로그 검색에서 기간을 자동으로 '최근 1개월'로 설정합니다.",
-  "version": "1.13",
+  "version": "1.18",
   "permissions": [
     "activeTab",
     "scripting"
