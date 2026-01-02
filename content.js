@@ -4,14 +4,7 @@
 (function () {
     'use strict';
 
-    const DEBUG = false; // 디버그 로그 끄기 (배포용)
     let lastUrl = '';
-
-    function log(...args) {
-        if (DEBUG) {
-            console.log('[네이버 1개월 고정]', ...args);
-        }
-    }
 
     // 검색 페이지인지 확인
     function isSearchPage() {
@@ -38,7 +31,8 @@
 
         dropdownBtn.click();
 
-        setTimeout(() => {
+        // 클릭 후 대기 없이 즉시 실행 (requestAnimationFrame 사용)
+        requestAnimationFrame(() => {
             let monthOption = document.querySelector('a[ng-click*="lastMonth"]');
             if (!monthOption) {
                 const allItems = document.querySelectorAll('a.item, .select_list a, .list_option a');
@@ -52,7 +46,7 @@
             if (monthOption) {
                 monthOption.click();
             }
-        }, 100); // 600ms -> 100ms로 단축
+        });
 
         return true;
     }
@@ -60,7 +54,7 @@
     // 검색 페이지 처리
     function handleSearchPage() {
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 3; // 최대 3번 시도
 
         const checkAndClick = () => {
             attempts++;
@@ -71,11 +65,11 @@
                     clickOneMonthOption();
                 }
             } else if (attempts < maxAttempts) {
-                setTimeout(checkAndClick, 100); // 500ms -> 100ms로 단축
+                setTimeout(checkAndClick, 50); // 재시도 간격 50ms
             }
         };
 
-        setTimeout(checkAndClick, 200); // 1000ms -> 200ms로 단축
+        setTimeout(checkAndClick, 50); // 초기 대기 50ms
     }
 
     // URL 변경 감지 (SPA 대응)
@@ -96,19 +90,19 @@
 
     history.pushState = function (...args) {
         originalPushState.apply(this, args);
-        setTimeout(watchUrlChange, 50);
+        setTimeout(watchUrlChange, 20);
     };
 
     history.replaceState = function (...args) {
         originalReplaceState.apply(this, args);
-        setTimeout(watchUrlChange, 50);
+        setTimeout(watchUrlChange, 20);
     };
 
-    window.addEventListener('popstate', () => setTimeout(watchUrlChange, 50));
-    window.addEventListener('hashchange', () => setTimeout(watchUrlChange, 50));
+    window.addEventListener('popstate', () => setTimeout(watchUrlChange, 20));
+    window.addEventListener('hashchange', () => setTimeout(watchUrlChange, 20));
 
     // 주기적 URL 체크
-    setInterval(watchUrlChange, 500); // 1000ms -> 500ms로 단축
+    setInterval(watchUrlChange, 200); // 200ms 간격
 
     // 초기 실행
     lastUrl = window.location.href;
