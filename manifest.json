@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "네이버 블로그 검색 기간 고정",
+  "description": "네이버 블로그 검색에서 기간을 자동으로 '최근 1개월'로 설정합니다.",
+  "version": "1.0",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": [
+    "*://section.blog.naver.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://section.blog.naver.com/Search*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
